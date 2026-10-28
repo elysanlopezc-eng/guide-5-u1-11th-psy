@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colegio Montano - Interactive Study Guide: Class 5 - Contemporary Perspectives</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Nunito & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            montano: {
+              blue: '#1269A8',
+              yellow: '#F7D615',
+              teal: '#54887D',
+              lightBlue: '#88B5C7',
+              olive: '#A6B046',
+              bgSoft: '#F2F5E9'
+            }
+          },
+          fontFamily: {
+            sans: ['Nunito', 'Segoe UI', 'Tahoma', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --montano-blue: #1269A8;
+      --montano-yellow: #F7D615;
+      --montano-teal: #54887D;
+      --montano-lightblue: #88B5C7;
+      --montano-olive: #A6B046;
+      --montano-bgsoft: #F2F5E9;
+    }
+
+    body {
+      background-color: #E2E8F0;
+      font-family: 'Nunito', sans-serif;
+      color: #334155;
+    }
+
+    /* Whiteboard Frame Styling */
+    .whiteboard-frame {
+      background-color: var(--montano-bgsoft);
+      border: 12px solid #CBD5E1;
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E2E8F0;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--montano-lightblue);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--montano-blue);
+    }
+
+    .tab-btn.active {
+      background-color: var(--montano-blue);
+      color: #FFFFFF;
+      border-bottom: 4px solid var(--montano-yellow);
+      transform: translateY(-2px);
+    }
+
+    .badge-time {
+      background-color: #E0F2FE;
+      color: #0369A1;
+      border: 1px solid #BAE6FD;
+    }
+  </style>
+</head>
+<body class="p-2 md:p-6 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Main Container / Digital Whiteboard Frame -->
+  <div id="whiteboard" class="whiteboard-frame w-full max-w-7xl mx-auto min-h-[90vh] flex flex-col overflow-hidden relative">
+    
+    <!-- Header Bar -->
+    <header class="bg-white border-b-2 border-slate-200 p-4 md:px-8 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-4">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+             alt="Colegio Montano Logo" 
+             class="h-14 w-auto object-contain drop-shadow-sm"
+             onerror="this.src='https://placehold.co/150x60/1269A8/FFFFFF?text=Colegio+Montano'">
+        <div>
+          <h1 class="text-xl md:text-2xl font-extrabold text-montano-blue tracking-tight">COLEGIO MONTANO</h1>
+          <p class="text-xs md:text-sm font-bold text-montano-teal flex items-center gap-2">
+            <span>Psychology Study Guide</span> • <span>Class 5: Contemporary Perspectives</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:block text-right">
+          <span class="block text-xs font-semibold text-slate-500">Target Grade</span>
+          <span class="inline-block bg-montano-yellow/30 text-slate-800 text-xs px-2.5 py-0.5 rounded-full font-bold">11th Grade / 4th High School</span>
+        </div>
+        <button onclick="toggleFullscreen()" class="bg-montano-blue hover:bg-montano-teal text-white p-3 rounded-xl shadow transition duration-200 flex items-center gap-2 text-sm font-bold" title="Toggle Fullscreen">
+          <i class="fa-solid fa-expand"></i>
+          <span class="hidden md:inline">Fullscreen</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Interactive Horizontal Tabs Navigation -->
+    <nav class="bg-slate-100 border-b border-slate-300 px-4 pt-3 flex space-x-2 overflow-x-auto text-sm font-bold">
+      <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-arrow-right-left text-montano-yellow"></i> 1. Bridge from Early Schools (10m)
+      </button>
+      <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-brain text-montano-yellow"></i> 2. Modern Perspectives (20m)
+      </button>
+      <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-network-wired text-montano-yellow"></i> 3. Perspective Matrix (20m)
+      </button>
+      <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-stethoscope text-montano-yellow"></i> 4. Multi-Lens Clinical Case (5m)
+      </button>
+      <button onclick="switchTab('tab5')" id="btn-tab5" class="tab-btn px-4 py-3 rounded-t-xl transition duration-200 flex items-center gap-2 whitespace-nowrap text-slate-700">
+        <i class="fa-solid fa-clipboard-check text-montano-yellow"></i> 5. Self-Assessment (5m)
+      </button>
+    </nav>
+
+    <!-- Main Content Display Container -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+
+      <!-- TAB 1: BRIDGE FROM EARLY SCHOOLS (10 MIN) -->
+      <section id="tab1" class="tab-content block space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-blue shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 10 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Evolution into Contemporary Psychology</h2>
+            <p class="text-slate-600 text-sm">See how early historical schools evolved into the diverse, interconnected contemporary perspectives of 21st-century psychology.</p>
+          </div>
+          <button onclick="speakText('Welcome to Class 5! Today we transition from historical schools like Structuralism and Behaviorism into contemporary perspectives. Modern psychology integrates biology, cognition, culture, and evolution to understand mind and behavior.')" class="bg-montano-yellow/30 hover:bg-montano-yellow text-slate-800 text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition">
+            <i class="fa-solid fa-volume-high"></i> Listen Overview
+          </button>
+        </div>
+
+        <!-- Quick Matching Activity -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-lg font-bold text-montano-blue flex items-center gap-2">
+            <i class="fa-solid fa-link text-montano-yellow"></i> Historical Lineage: Matching Past Roots to Modern Branches
+          </h3>
+          <p class="text-xs text-slate-600">Match each historical school to its modern direct descendant perspective:</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Card 1 -->
+            <div class="p-4 bg-montano-bgSoft rounded-xl border border-slate-200 space-y-2 text-xs">
+              <span class="font-bold text-montano-blue text-sm block">1. Early Behaviorism & Wundt's Mental States</span>
+              <p class="text-slate-600">Evolved into analyzing internal mental processing, memory, and information processing:</p>
+              <select id="bridge-q1" class="w-full p-2 rounded-lg border border-slate-300 font-semibold text-xs bg-white">
+                <option value="">-- Select Modern Perspective --</option>
+                <option value="cognitive">Cognitive Perspective</option>
+                <option value="biological">Biological / Neuroscience Perspective</option>
+                <option value="humanistic">Humanistic Perspective</option>
+              </select>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="p-4 bg-montano-bgSoft rounded-xl border border-slate-200 space-y-2 text-xs">
+              <span class="font-bold text-montano-teal text-sm block">2. Reaction against Behaviorism & Psychoanalysis</span>
+              <p class="text-slate-600">Evolved into emphasizing human potential, free will, and self-actualization:</p>
+              <select id="bridge-q2" class="w-full p-2 rounded-lg border border-slate-300 font-semibold text-xs bg-white">
+                <option value="">-- Select Modern Perspective --</option>
+                <option value="cognitive">Cognitive Perspective</option>
+                <option value="biological">Biological / Neuroscience Perspective</option>
+                <option value="humanistic">Humanistic Perspective</option>
+              </select>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="p-4 bg-montano-bgSoft rounded-xl border border-slate-200 space-y-2 text-xs">
+              <span class="font-bold text-montano-olive text-sm block">3. Physiological Foundations (Helmholtz & Fechner)</span>
+              <p class="text-slate-600">Evolved into studying neurotransmitters, brain structures, genetics, and hormones:</p>
+              <select id="bridge-q3" class="w-full p-2 rounded-lg border border-slate-300 font-semibold text-xs bg-white">
+                <option value="">-- Select Modern Perspective --</option>
+                <option value="cognitive">Cognitive Perspective</option>
+                <option value="biological">Biological / Neuroscience Perspective</option>
+                <option value="humanistic">Humanistic Perspective</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="checkBridge()" class="w-full bg-montano-blue hover:bg-montano-teal text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+            Verify Historical Lineage
+          </button>
+
+          <div id="bridge-feedback" class="hidden p-3 rounded-xl text-xs font-bold"></div>
+        </div>
+      </section>
+
+      <!-- TAB 2: CONTEMPORARY PERSPECTIVES (20 MIN) -->
+      <section id="tab2" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-teal shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 20 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">The 6 Major Contemporary Perspectives</h2>
+            <p class="text-slate-600 text-sm">Explore how today's psychologists examine human behavior and mental processes from complementary viewpoints.</p>
+          </div>
+        </div>
+
+        <!-- Interactive Cards Grid for 6 Perspectives -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- 1. Biological / Neuroscience -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-dna text-montano-yellow mr-1.5"></i> Biological / Neuroscience</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Brain & Body</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Topics: Neurotransmitters, Genetics, Brain Anatomy</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Examines how body chemistry, brain structures, hormonal fluctuations, and genetic inheritances create our thoughts, feelings, and behaviors.
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How do brain circuits and chemical messengers regulate emotion and memory?
+            </div>
+          </div>
+
+          <!-- 2. Cognitive Perspective -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-microchip text-montano-yellow mr-1.5"></i> Cognitive Perspective</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Information Processing</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Figures: Jean Piaget, Aaron Beck, Noam Chomsky</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Investigates how we encode, process, store, and retrieve information. Views the human mind similarly to a sophisticated computer processor.
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How do thinking patterns, problem-solving, and beliefs distort our view of reality?
+            </div>
+          </div>
+
+          <!-- 3. Humanistic Perspective -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-heart-pulse text-montano-yellow mr-1.5"></i> Humanistic Perspective</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Growth & Free Will</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Figures: Carl Rogers, Abraham Maslow</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Stresses human potential, personal growth, self-actualization, and individual free choice, viewing individuals as inherently striving toward fulfillment.
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How do unconditional positive regard and self-concept drive human flourishing?
+            </div>
+          </div>
+
+          <!-- 4. Evolutionary Perspective -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-seedling text-montano-yellow mr-1.5"></i> Evolutionary Perspective</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Adaptation & Survival</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Figure: David Buss (based on Charles Darwin)</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Analyzes how natural selection favoured specific psychological traits and evolutionary mechanisms that aided human survival and reproduction over millennia.
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How does natural selection explain universal human behaviors like mate choice or fear of snakes?
+            </div>
+          </div>
+
+          <!-- 5. Sociocultural Perspective -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-globe text-montano-yellow mr-1.5"></i> Sociocultural Perspective</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Context & Environment</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Figure: Lev Vygotsky</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Examines how behavior, cognitive processing, and attitudes vary across different cultures, social groups, norms, and environmental conditions.
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How do cultural expectations and social norms shape personality and moral reasoning?
+            </div>
+          </div>
+
+          <!-- 6. Modern Psychodynamic / Behavioral -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3 hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="text-base font-bold text-montano-blue"><i class="fa-solid fa-diagram-project text-montano-yellow mr-1.5"></i> Psychodynamic & Learning</h3>
+                <span class="text-[10px] bg-slate-100 font-bold px-2 py-0.5 rounded-full text-slate-600">Focus: Evolved Roots</span>
+              </div>
+              <p class="text-xs font-semibold text-montano-teal mb-2">Key Figures: Neo-Freudians & Applied Behavioral Analysts</p>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Modern adaptations focusing on interpersonal relations, attachment theories (Psychodynamic), and observable environmental reinforcement schedules (Behavioral).
+              </p>
+            </div>
+            <div class="bg-montano-bgSoft p-2.5 rounded-xl text-[11px] text-slate-700">
+              <strong>Key Question:</strong> How do early attachment styles or learned habits influence adult choices?
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 3: COMPARATIVE MATRIX (20 MIN) -->
+      <section id="tab3" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-yellow shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 20 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Comparative Matrix: Contemporary Perspectives</h2>
+            <p class="text-slate-600 text-sm">Compare underlying causes of behavior, core assumptions, and treatment/research approaches side-by-side.</p>
+          </div>
+        </div>
+
+        <!-- Comparative Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-montano-blue text-white font-extrabold uppercase tracking-wider">
+                  <th class="p-3.5 border-b border-slate-300">Contemporary Perspective</th>
+                  <th class="p-3.5 border-b border-slate-300">Primary Cause of Behavior</th>
+                  <th class="p-3.5 border-b border-slate-300">Core Focus / Key Question</th>
+                  <th class="p-3.5 border-b border-slate-300">Practical Application / Method</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-3.5 font-bold text-montano-blue flex items-center gap-2">
+                    <i class="fa-solid fa-dna text-montano-teal"></i> Biological
+                  </td>
+                  <td class="p-3.5 text-slate-700 font-semibold">Brain structure, genes, neurotransmitters</td>
+                  <td class="p-3.5 text-slate-800 font-medium">How biology drives mind and behavior</td>
+                  <td class="p-3.5 text-slate-600">Neuroimaging (fMRI), pharmacotherapy, genetic mapping.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-3.5 font-bold text-montano-blue flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-montano-teal"></i> Cognitive
+                  </td>
+                  <td class="p-3.5 text-slate-700 font-semibold">Mental processing, interpretations, memory schemas</td>
+                  <td class="p-3.5 text-slate-800 font-medium">How we store and interpret experiences</td>
+                  <td class="p-3.5 text-slate-600">Cognitive Behavioral Therapy (CBT), memory trials.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-3.5 font-bold text-montano-blue flex items-center gap-2">
+                    <i class="fa-solid fa-heart-pulse text-montano-teal"></i> Humanistic
+                  </td>
+                  <td class="p-3.5 text-slate-700 font-semibold">Self-concept, free choice, drive to actualize</td>
+                  <td class="p-3.5 text-slate-600">Meeting personal growth and emotional needs</td>
+                  <td class="p-3.5 text-slate-600">Person-centered therapy, active listening, self-exploration.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-3.5 font-bold text-montano-blue flex items-center gap-2">
+                    <i class="fa-solid fa-seedling text-montano-teal"></i> Evolutionary
+                  </td>
+                  <td class="p-3.5 text-slate-700 font-semibold">Natural selection, adaptive ancestral traits</td>
+                  <td class="p-3.5 text-slate-800 font-medium">How traits helped species survive</td>
+                  <td class="p-3.5 text-slate-600">Cross-species comparison, adaptive trait modeling.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-3.5 font-bold text-montano-blue flex items-center gap-2">
+                    <i class="fa-solid fa-globe text-montano-teal"></i> Sociocultural
+                  </td>
+                  <td class="p-3.5 text-slate-700 font-semibold">Cultural norms, social expectations, environment</td>
+                  <td class="p-3.5 text-slate-800 font-medium">How social context shapes choices</td>
+                  <td class="p-3.5 text-slate-600">Cross-cultural comparative studies, observational analysis.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: CASE DISCUSSION (5 MIN) -->
+      <section id="tab4" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-olive shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 5 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Multi-Lens Clinical Case: Understanding Depression</h2>
+            <p class="text-slate-600 text-sm">Analyze how modern psychologists use the <strong>Biopsychosocial Model</strong> to explain depression through multiple complementary perspectives.</p>
+          </div>
+        </div>
+
+        <!-- Practical Case Scenario -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div class="bg-montano-bgSoft p-4 rounded-xl border border-slate-200 text-xs text-slate-800 space-y-1">
+            <span class="font-extrabold text-montano-blue text-sm block"><i class="fa-solid fa-notes-medical text-montano-yellow mr-1"></i> Case Scenario: "Severe Depressive Episode"</span>
+            <p class="text-slate-600">Sofia, an 11th-grade student, exhibits chronic low energy, negative self-talk, social withdrawal, and difficulty sleeping following an academic setback.</p>
+          </div>
+
+          <p class="text-xs font-bold text-slate-700">Select a modern perspective lens to see its explanation and recommended intervention:</p>
+
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+            <button onclick="showPerspectiveCase('biological')" id="case-btn-biological" class="p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-montano-blue hover:text-white transition">
+              Biological Lens
+            </button>
+            <button onclick="showPerspectiveCase('cognitive')" id="case-btn-cognitive" class="p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-montano-blue hover:text-white transition">
+              Cognitive Lens
+            </button>
+            <button onclick="showPerspectiveCase('humanistic')" id="case-btn-humanistic" class="p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-montano-blue hover:text-white transition">
+              Humanistic Lens
+            </button>
+            <button onclick="showPerspectiveCase('sociocultural')" id="case-btn-sociocultural" class="p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-montano-blue hover:text-white transition">
+              Sociocultural Lens
+            </button>
+            <button onclick="showPerspectiveCase('evolutionary')" id="case-btn-evolutionary" class="p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-montano-blue hover:text-white transition">
+              Evolutionary Lens
+            </button>
+          </div>
+
+          <!-- Explanation Display Card -->
+          <div id="case-perspective-box" class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-2 hidden">
+            <h4 id="case-perspective-title" class="text-sm font-bold text-montano-blue"></h4>
+            <p id="case-perspective-text" class="text-xs text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: SELF-ASSESSMENT & EXIT TICKET (5 MIN) -->
+      <section id="tab5" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border-l-8 border-montano-blue shadow-sm flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="badge-time text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> 5 Minutes</span>
+            <h2 class="text-2xl font-bold text-montano-blue mt-2">Class 5 Self-Assessment Exit Ticket</h2>
+            <p class="text-slate-600 text-sm">Reflect on your comprehension of contemporary psychological perspectives and the biopsychosocial approach.</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <form id="exit-ticket-form-c5" onsubmit="submitExitTicketC5(event)" class="space-y-4">
+            
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">1. Explain what the "Biopsychosocial Model" is and why modern psychology prefers combining perspectives rather than using just one:</label>
+              <textarea id="et5-q1" required rows="2" placeholder="The Biopsychosocial Model integrates biological, psychological, and social factors because human behavior is too complex to explain with a single perspective..." class="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-montano-blue outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">2. How does the Cognitive Perspective's view of human behavior differ fundamental from the Biological Perspective's view?</label>
+              <textarea id="et5-q2" required rows="2" placeholder="Cognitive focuses on mental processing, thoughts, and interpretation, whereas Biological focuses on physical brain structures, neurotransmitters, and genes..." class="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-montano-teal outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">3. Name the contemporary perspective championed by Carl Rogers and Abraham Maslow that emphasizes free will and self-actualization:</label>
+              <input type="text" id="et5-q3" required placeholder="e.g., Humanistic Perspective" class="w-full p-3 rounded-xl border border-slate-300 text-xs">
+            </div>
+
+            <button type="submit" class="w-full bg-montano-blue hover:bg-montano-teal text-white font-bold py-3 rounded-xl transition duration-200 shadow text-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Submit Class 5 Self-Assessment
+            </button>
+          </form>
+
+          <!-- Feedback Box -->
+          <div id="exit-feedback-c5" class="hidden bg-montano-bgSoft p-5 rounded-xl border border-montano-olive/40 space-y-2">
+            <h4 class="text-sm font-bold text-montano-blue flex items-center gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i> Class 5 Self-Assessment Completed!
+            </h4>
+            <p id="exit-feedback-msg-c5" class="text-xs text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Bar -->
+    <footer class="bg-white border-t border-slate-200 p-3 px-6 text-center text-xs text-slate-500 flex justify-between items-center">
+      <span>&copy; Colegio Montano - Social Sciences Department</span>
+      <span class="font-bold text-montano-blue">Psychology Course (11th Grade)</span>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    /* Tab Switcher Logic */
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById('btn-' + tabId).classList.add('active');
+    }
+
+    /* Fullscreen API Toggle */
+    function toggleFullscreen() {
+      const whiteboard = document.getElementById('whiteboard');
+      if (!document.fullscreenElement) {
+        whiteboard.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    /* Text-to-Speech Helper */
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Text-to-Speech is not supported in this browser.");
+      }
+    }
+
+    /* Tab 1 Historical Lineage Verification */
+    function checkBridge() {
+      const q1 = document.getElementById('bridge-q1').value;
+      const q2 = document.getElementById('bridge-q2').value;
+      const q3 = document.getElementById('bridge-q3').value;
+      const fb = document.getElementById('bridge-feedback');
+
+      fb.classList.remove('hidden');
+
+      if (q1 === 'cognitive' && q2 === 'humanistic' && q3 === 'biological') {
+        fb.className = "p-3 rounded-xl text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        fb.innerHTML = "<i class='fa-solid fa-circle-check mr-1'></i> Perfect! You correctly identified how early roots evolved into modern perspectives.";
+        speakText("Great job! You correctly mapped the lineage from early schools to contemporary perspectives.");
+      } else {
+        fb.className = "p-3 rounded-xl text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300";
+        fb.innerHTML = "<i class='fa-solid fa-circle-exclamation mr-1'></i> Double check your choices: Mental processing = Cognitive, Free Will = Humanistic, Physiology/Sensations = Biological.";
+      }
+    }
+
+    /* Tab 4 Case Discussion Explanations */
+    const perspectiveCases = {
+      biological: {
+        title: "Biological / Neuroscience Lens",
+        text: "Attributes Sofia's depression to an imbalance in serotonin neurotransmitters, genetic predisposition, or sleep-cycle disruptions in the brain. Recommends medical evaluation or SSRI medication."
+      },
+      cognitive: {
+        title: "Cognitive Lens",
+        text: "Attributes Sofia's state to irrational negative thinking patterns ('I fail at everything', cognitive distortions) and memory biases. Recommends Cognitive Behavioral Therapy (CBT) to reframe negative self-talk."
+      },
+      humanistic: {
+        title: "Humanistic Lens",
+        text: "Attributes depression to a barrier in fulfilling personal potential and a gap between her ideal self and actual performance. Recommends person-centered therapy with unconditional positive regard."
+      },
+      sociocultural: {
+        title: "Sociocultural Lens",
+        text: "Examines intense academic competition, peer expectations, family pressures, and cultural norms around performance. Recommends support networks and balancing cultural expectations."
+      },
+      evolutionary: {
+        title: "Evolutionary Lens",
+        text: "Views low energy and withdrawal as an adaptive historical mechanism (conserving energy during times of social loss or perceived failure). Recommends gradual social re-engagement."
+      }
+    };
+
+    function showPerspectiveCase(key) {
+      const box = document.getElementById('case-perspective-box');
+      const title = document.getElementById('case-perspective-title');
+      const text = document.getElementById('case-perspective-text');
+
+      box.classList.remove('hidden');
+      title.innerText = perspectiveCases[key].title;
+      text.innerText = perspectiveCases[key].text;
+
+      speakText(`${perspectiveCases[key].title}. ${perspectiveCases[key].text}`);
+    }
+
+    /* Tab 5 Exit Ticket Submission */
+    function submitExitTicketC5(e) {
+      e.preventDefault();
+      const feedbackBox = document.getElementById('exit-feedback-c5');
+      const feedbackMsg = document.getElementById('exit-feedback-msg-c5');
+
+      feedbackBox.classList.remove('hidden');
+      feedbackMsg.innerText = `Outstanding effort! You have successfully submitted your Class 5 Self-Assessment. You now possess a clear understanding of how biological, cognitive, humanistic, evolutionary, and sociocultural perspectives work together in modern psychology.`;
+      speakText("Class 5 self-assessment completed! Excellent work.");
+    }
+  </script>
+</body>
+</html>
